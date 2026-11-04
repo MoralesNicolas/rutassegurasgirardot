@@ -1,0 +1,21 @@
+<%- include('layout/head') %>
+<%- include('layout/header') %>
+<article class="page narrow prose">
+  <p class="eyebrow">Ley 1581 de 2012 · Habeas data</p>
+  <h1>Así cuidamos tus datos</h1>
+  <h2>Qué guardamos</h2>
+  <ul>
+    <li><strong>Cuenta:</strong> nombre, correo y contraseña (la contraseña nunca se guarda tal cual: solo un hash con bcrypt).</li>
+    <li><strong>Rutas:</strong> el origen, el destino y el trazado de las rutas que tú inicias, para tu historial.</li>
+    <li><strong>Contactos de confianza:</strong> su teléfono y correo se guardan <strong>cifrados</strong> (AES-256).</li>
+    <li><strong>Ubicación en vivo:</strong> solo si das tu consentimiento y solo mientras compartes un recorrido. El enlace vence en 2 horas.</li>
+  </ul>
+  <h2>Para qué</h2>
+  <p>Únicamente para calcular rutas, avisar a tus contactos cuando pides ayuda y mejorar el puntaje de seguridad con calificaciones anónimas por tramo. No vendemos ni compartimos tus datos.</p>
+  <h2>Tus derechos</h2>
+  <p>Puedes conocer, actualizar y <strong>borrar tu cuenta y todos tus datos</strong> desde “Mi red”. Puedes retirar el permiso de ubicación cuando quieras.</p>
+  <h2>Datos de demostración</h2>
+  <p>Las zonas de riesgo y los puntos seguros marcados como “demo” son ejemplos para probar la app. No describen la realidad de ningún barrio de Girardot.</p>
+  <p><a class="btn btn-ghost" href="/">Volver</a></p>
+</article>
+<%- include('layout/footer') %>

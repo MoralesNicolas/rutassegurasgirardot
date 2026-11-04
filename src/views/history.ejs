@@ -1,0 +1,41 @@
+<%- include('layout/head') %>
+<%- include('layout/header') %>
+<section class="page narrow" aria-labelledby="hist-title">
+  <p class="eyebrow">Historial</p>
+  <h1 id="hist-title">Tus recorridos</h1>
+  <% if (rated) { %><p class="notice notice-ok" role="status">Gracias. Tu calificación ya ayuda a otras usuarias a elegir su camino.</p><% } %>
+
+  <% if (!trips.length) { %>
+  <div class="empty card">
+    <svg class="icon empty-icon" aria-hidden="true"><use href="#i-route"/></svg>
+    <p><strong>Aún no tienes recorridos.</strong> Cuando inicies una ruta, aparecerá aquí para que puedas calificarla.</p>
+    <a class="btn btn-primary" href="/map">Trazar mi primera ruta</a>
+  </div>
+  <% } else { %>
+  <ol class="trip-list">
+    <% const STATUS = { active: 'En curso', completed: 'Completado', alert: 'Con alerta', cancelled: 'Cancelado' }; %>
+    <% trips.forEach(function (t) { %>
+    <li class="trip-item">
+      <div class="trip-main">
+        <p class="trip-when"><%= new Date(t.started_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Bogota' }) %></p>
+        <p class="trip-route"><%= t.origin_label || 'Origen' %> <span aria-hidden="true">→</span><span class="visually-hidden">hasta</span> <%= t.dest_label || 'Destino' %></p>
+        <p class="trip-meta">
+          <span class="tag tag-<%= t.route_type %>"><%= t.route_type === 'safe' ? 'Ruta segura' : 'Ruta rápida' %></span>
+          <%= t.safety_score %>/100 · <%= Math.max(1, Math.round(t.duration_s / 60)) %> min · <%= STATUS[t.status] || t.status %>
+        </p>
+      </div>
+      <div class="trip-side">
+        <% if (t.stars) { %>
+        <span class="stars-static" aria-label="Calificado con <%= t.stars %> de 5 estrellas"><%= t.stars %> <svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></span>
+        <% } else if (t.status === 'active') { %>
+        <a class="btn btn-ghost btn-sm" href="/trip/<%= t.id %>">Continuar</a>
+        <% } else { %>
+        <a class="btn btn-ghost btn-sm" href="/trip/<%= t.id %>/rate">Calificar</a>
+        <% } %>
+      </div>
+    </li>
+    <% }) %>
+  </ol>
+  <% } %>
+</section>
+<%- include('layout/footer') %>

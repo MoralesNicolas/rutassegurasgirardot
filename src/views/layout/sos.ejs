@@ -1,0 +1,27 @@
+<!-- Botón de ayuda: siempre visible, al alcance del pulgar derecho -->
+<button type="button" class="sos" id="sos-btn" data-trip="<%= typeof tripId !== 'undefined' ? tripId : '' %>"
+  aria-haspopup="dialog" aria-label="Pedir ayuda: llama al 123 y avisa a tus contactos">
+  <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg>Ayuda
+</button>
+
+<dialog class="sos-dialog" id="sos-dialog" aria-labelledby="sos-title" aria-describedby="sos-desc">
+  <div id="sos-counting">
+    <h2 id="sos-title">Pidiendo ayuda</h2>
+    <p id="sos-desc">En unos segundos llamamos al 123 y avisamos a tus contactos.</p>
+    <p class="countdown" id="sos-count" aria-live="assertive">3</p>
+    <div class="sos-actions">
+      <button type="button" class="btn btn-danger btn-block" id="sos-now">Llamar ya</button>
+      <button type="button" class="btn btn-ghost btn-block" id="sos-cancel">Cancelar, estoy bien</button>
+    </div>
+  </div>
+  <div id="sos-done" hidden>
+    <h2>Ayuda en camino</h2>
+    <p id="sos-result" role="status"></p>
+    <ul id="sos-contacts" class="sos-actions plain-list"></ul>
+    <div class="sos-actions">
+      <a class="btn btn-danger btn-block" href="tel:123">Llamar al 123</a>
+      <button type="button" class="btn btn-ghost btn-block" id="sos-alarm" aria-pressed="false">Sonar alarma</button>
+      <button type="button" class="btn btn-ghost btn-block" id="sos-close">Cerrar</button>
+    </div>
+  </div>
+</dialog>

@@ -1,0 +1,32 @@
+<%- include('../layout/head') %>
+<%- include('../layout/header') %>
+<section class="page narrow" aria-labelledby="adm-title">
+  <p class="eyebrow">Solo equipo de moderación</p>
+  <h1 id="adm-title">Reportes de la comunidad</h1>
+  <p class="lead">Revisa cada reporte antes de que afecte el mapa. Así evitamos reportes falsos o que estigmaticen un sector.</p>
+  <% if (done) { %><p class="notice notice-ok" role="status">Reporte revisado.</p><% } %>
+
+  <% if (!incidents.length) { %>
+  <div class="empty card"><p><strong>No hay reportes por revisar.</strong> Cuando una usuaria reporte un problema en el mapa, aparecerá aquí.</p></div>
+  <% } else { %>
+  <ul class="trip-list">
+    <% const STATUS = { pending: 'Pendiente', approved: 'Aprobado', rejected: 'Rechazado' }; %>
+    <% incidents.forEach(function (i) { %>
+    <li class="trip-item">
+      <div class="trip-main">
+        <p class="trip-when"><%= new Date(i.created_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Bogota' }) %> · <%= STATUS[i.status] %></p>
+        <p class="trip-route"><%= TYPE_TEXT[i.type] || i.type %></p>
+        <p class="trip-meta"><%= i.description || 'Sin descripción' %> · <a href="https://www.openstreetmap.org/?mlat=<%= i.lat %>&mlon=<%= i.lng %>#map=18/<%= i.lat %>/<%= i.lng %>" target="_blank" rel="noopener">ver punto</a></p>
+      </div>
+      <% if (i.status === 'pending') { %>
+      <form method="post" action="/admin/incidents/<%= i.id %>" class="trip-side review-actions">
+        <button type="submit" name="action" value="approve" class="btn btn-primary btn-sm">Aprobar</button>
+        <button type="submit" name="action" value="reject" class="btn btn-ghost btn-sm">Rechazar</button>
+      </form>
+      <% } %>
+    </li>
+    <% }) %>
+  </ul>
+  <% } %>
+</section>
+<%- include('../layout/footer') %>

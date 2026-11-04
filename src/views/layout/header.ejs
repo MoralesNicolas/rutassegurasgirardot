@@ -1,0 +1,42 @@
+<body class="<%= typeof bodyClass !== 'undefined' ? bodyClass : '' %><%= user ? ' has-tabbar' : '' %>">
+<a class="skip-link" href="#main">Saltar al contenido</a>
+<%- include('icons') %>
+<header class="topbar">
+  <a class="brand" href="/" aria-label="RutaSegura Girardot, inicio">
+    <svg class="icon brand-lamp" aria-hidden="true"><use href="#i-lamp"/></svg>
+    <span class="brand-name">RutaSegura</span>
+    <span class="brand-city">Girardot</span>
+  </a>
+  <% if (user) { %>
+  <!-- En celular esta navegación se vuelve una barra inferior, al alcance del pulgar -->
+  <nav class="mainnav" aria-label="Secciones">
+    <a href="/map" <%- currentPath === '/map' ? 'aria-current="page"' : '' %>>
+      <svg class="icon" aria-hidden="true"><use href="#i-map"/></svg><span>Mapa</span>
+    </a>
+    <a href="/history" <%- currentPath === '/history' ? 'aria-current="page"' : '' %>>
+      <svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg><span>Historial</span>
+    </a>
+    <a href="/contacts" <%- currentPath === '/contacts' ? 'aria-current="page"' : '' %>>
+      <svg class="icon" aria-hidden="true"><use href="#i-users"/></svg><span>Mi red</span>
+    </a>
+    <% if (user.role === 'admin') { %>
+    <a href="/admin/incidents" <%- currentPath.startsWith('/admin') ? 'aria-current="page"' : '' %>>
+      <svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Moderar</span>
+    </a>
+    <% } %>
+  </nav>
+  <% } %>
+  <div class="topbar-actions">
+    <button type="button" class="icon-btn" id="theme-toggle" aria-pressed="false" aria-label="Activar modo noche">
+      <svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>
+    </button>
+    <% if (user) { %>
+    <form method="post" action="/logout" class="inline-form">
+      <button type="submit" class="icon-btn" aria-label="Cerrar sesión">
+        <svg class="icon" aria-hidden="true"><use href="#i-logout"/></svg>
+      </button>
+    </form>
+    <% } %>
+  </div>
+</header>
+<main id="main" tabindex="-1">

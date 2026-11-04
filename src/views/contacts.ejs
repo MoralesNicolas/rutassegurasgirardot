@@ -1,0 +1,71 @@
+<%- include('layout/head') %>
+<%- include('layout/header') %>
+<section class="page narrow" aria-labelledby="c-title">
+  <p class="eyebrow">Mi red</p>
+  <h1 id="c-title">Tus personas de confianza</h1>
+  <p class="lead">Si pides ayuda, les avisamos con tu última ubicación. Sus datos se guardan cifrados.</p>
+  <% const MSG = { contacto: 'Contacto guardado.', borrado: 'Contacto eliminado.', ajustes: 'Ajustes guardados.' }; %>
+  <% if (saved && MSG[saved]) { %><p class="notice notice-ok" role="status"><%= MSG[saved] %></p><% } %>
+
+  <% if (!contacts.length) { %>
+  <p class="notice notice-info">Todavía no tienes contactos. Agrega al menos uno: puede ser tu mamá, una amiga o tu pareja.</p>
+  <% } else { %>
+  <ul class="contact-list">
+    <% contacts.forEach(function (c) { %>
+    <li class="contact-item">
+      <div><strong><%= c.name %></strong><br><span class="muted"><%= c.phone %><%= c.email ? ' · ' + c.email : '' %></span></div>
+      <form method="post" action="/contacts/<%= c.id %>/delete">
+        <button type="submit" class="btn btn-ghost btn-sm" aria-label="Eliminar a <%= c.name %>">Eliminar</button>
+      </form>
+    </li>
+    <% }) %>
+  </ul>
+  <% } %>
+
+  <form method="post" action="/contacts" class="card stack" aria-labelledby="add-title">
+    <h2 id="add-title" class="h3">Agregar contacto</h2>
+    <div class="field<%= errors.name ? ' has-error' : '' %>">
+      <label for="c-name">Nombre</label>
+      <input id="c-name" name="name" type="text" required maxlength="100" value="<%= values.name || '' %>" <% if (errors.name) { %>aria-invalid="true" aria-describedby="c-name-error"<% } %>>
+      <% if (errors.name) { %><p class="field-error" id="c-name-error"><%= errors.name %></p><% } %>
+    </div>
+    <div class="field<%= errors.phone ? ' has-error' : '' %>">
+      <label for="c-phone">Celular</label>
+      <input id="c-phone" name="phone" type="tel" inputmode="tel" autocomplete="off" required maxlength="20" placeholder="3001234567" value="<%= values.phone || '' %>" <% if (errors.phone) { %>aria-invalid="true" aria-describedby="c-phone-error"<% } %>>
+      <% if (errors.phone) { %><p class="field-error" id="c-phone-error"><%= errors.phone %></p><% } %>
+    </div>
+    <div class="field<%= errors.email ? ' has-error' : '' %>">
+      <label for="c-email">Correo (opcional)</label>
+      <input id="c-email" name="email" type="email" maxlength="150" value="<%= values.email || '' %>" <% if (errors.email) { %>aria-invalid="true" aria-describedby="c-email-error"<% } %>>
+      <% if (errors.email) { %><p class="field-error" id="c-email-error"><%= errors.email %></p><% } %>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Guardar contacto</button>
+  </form>
+
+  <form method="post" action="/settings" class="card stack settings" aria-labelledby="set-title">
+    <h2 id="set-title" class="h3">Ajustes de privacidad</h2>
+    <div class="field field-check">
+      <input id="s-consent" name="consentLocation" type="checkbox" <%= profile.consent_location ? 'checked' : '' %>>
+      <label for="s-consent">Autorizo usar mi ubicación durante mis recorridos (Ley 1581 de 2012).</label>
+    </div>
+    <div class="field<%= errors.inactivityMinutes ? ' has-error' : '' %>">
+      <label for="s-inactivity">Preguntarme si estoy bien después de (minutos sin moverme)</label>
+      <input id="s-inactivity" name="inactivityMinutes" type="number" min="1" max="60" required value="<%= profile.inactivity_minutes %>" aria-describedby="inact-help">
+      <details class="help" id="inact-help">
+        <summary><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>¿Para qué sirve?</summary>
+        <p>Si durante un recorrido pasa este tiempo sin que toques la pantalla, te preguntaremos si estás bien. Si no respondes, sonará la alarma y avisaremos a tus contactos.</p>
+      </details>
+      <% if (errors.inactivityMinutes) { %><p class="field-error"><%= errors.inactivityMinutes %></p><% } %>
+    </div>
+    <button type="submit" class="btn btn-ghost btn-block">Guardar ajustes</button>
+  </form>
+
+  <details class="danger-zone">
+    <summary>Borrar mi cuenta y todos mis datos</summary>
+    <p>Se eliminan para siempre tu cuenta, tus recorridos, tus contactos y tus alertas. No se puede deshacer.</p>
+    <form method="post" action="/account/delete">
+      <button type="submit" class="btn btn-danger">Sí, borrar todo</button>
+    </form>
+  </details>
+</section>
+<%- include('layout/footer') %>

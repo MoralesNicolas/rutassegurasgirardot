@@ -1,0 +1,116 @@
+<%- include('layout/head') %>
+<%- include('layout/header', { bodyClass: 'page-map' }) %>
+<div class="map-layout">
+  <div id="map" class="map" role="region" aria-label="Mapa de Girardot. Toca para marcar el origen y el destino."
+    data-lat="<%= city.center_lat %>" data-lng="<%= city.center_lng %>"
+    data-south="<%= city.bbox_south %>" data-west="<%= city.bbox_west %>"
+    data-north="<%= city.bbox_north %>" data-east="<%= city.bbox_east %>"></div>
+
+  <section class="route-panel" aria-labelledby="panel-title">
+    <h1 id="panel-title" class="panel-title">¿A dónde vas, <%= user.name.split(' ')[0] %>?</h1>
+    <p id="status" class="status" role="status" aria-live="polite">Toca el mapa para marcar desde dónde sales.</p>
+
+    <ol class="places">
+      <li class="place" data-place="origin">
+        <span class="place-dot origin" aria-hidden="true"></span>
+        <div class="place-text"><span class="place-label">Desde</span><span class="place-value" id="origin-value">Sin marcar</span></div>
+        <button type="button" class="btn btn-ghost btn-sm" id="use-location">
+          <svg class="icon" aria-hidden="true"><use href="#i-locate"/></svg>Mi ubicación
+        </button>
+      </li>
+      <li class="place" data-place="dest">
+        <span class="place-dot dest" aria-hidden="true"></span>
+        <div class="place-text"><span class="place-label">Hasta</span><span class="place-value" id="dest-value">Sin marcar</span></div>
+        <button type="button" class="btn btn-ghost btn-sm" id="pick-dest" aria-pressed="false">
+          <svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Marcar
+        </button>
+      </li>
+    </ol>
+
+    <form id="search-form" class="search" role="search">
+      <label for="search-input">Buscar un lugar en Girardot</label>
+      <div class="search-row">
+        <input id="search-input" type="search" maxlength="120" autocomplete="off" placeholder="Ej.: Parque Simón Bolívar">
+        <button type="submit" class="btn btn-ghost btn-sm">Buscar</button>
+      </div>
+      <ul id="search-results" class="search-results" hidden></ul>
+    </form>
+
+    <button type="button" id="compute" class="btn btn-primary btn-block" disabled>
+      <svg class="icon" aria-hidden="true"><use href="#i-route"/></svg>Trazar ruta segura
+    </button>
+
+    <div id="results" class="results" hidden>
+      <fieldset class="route-options">
+        <legend>Elige tu ruta</legend>
+        <details class="help">
+          <summary><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>¿Cómo calculamos el puntaje?</summary>
+          <p>Empezamos en 100. Restamos por cada tramo dentro de una zona con poca luz o con reportes, y por tramos sin un lugar donde pedir ayuda cerca. Sumamos por pasar junto a CAI, estaciones o comercios 24 h, y por las calificaciones de otras usuarias. Es una estimación, no una garantía.</p>
+        </details>
+        <label class="route-option safe">
+          <input type="radio" name="route" value="safe" checked>
+          <span class="route-head"><span class="route-swatch safe" aria-hidden="true"></span><strong>Ruta segura</strong> <span class="route-score" id="safe-score"></span></span>
+          <span class="lamps" id="safe-lamps"></span>
+          <span class="route-meta" id="safe-meta"></span>
+        </label>
+        <label class="route-option fast">
+          <input type="radio" name="route" value="fast">
+          <span class="route-head"><span class="route-swatch fast" aria-hidden="true"></span><strong>Ruta rápida</strong> <span class="route-score" id="fast-score"></span></span>
+          <span class="lamps" id="fast-lamps"></span>
+          <span class="route-meta" id="fast-meta"></span>
+        </label>
+      </fieldset>
+      <div class="why">
+        <h2 class="why-title">Por qué la recomendamos</h2>
+        <ul id="explanation"></ul>
+      </div>
+      <button type="button" id="start-trip" class="btn btn-primary btn-block">
+        <svg class="icon" aria-hidden="true"><use href="#i-flag"/></svg>Iniciar recorrido
+      </button>
+      <p class="muted small" id="provider"></p>
+    </div>
+
+    <details class="legend report">
+      <summary>Reportar un problema en la calle</summary>
+      <form id="report-form" class="stack">
+        <p class="small muted">Tu reporte es anónimo y lo revisa el equipo de moderación antes de aparecer en el mapa.</p>
+        <button type="button" class="btn btn-ghost btn-block" id="report-pick" aria-pressed="false">
+          <svg class="icon" aria-hidden="true"><use href="#i-map"/></svg><span id="report-point">Elegir el punto en el mapa</span>
+        </button>
+        <div class="field">
+          <label for="report-type">¿Qué pasó o qué viste?</label>
+          <select id="report-type" required>
+            <option value="sin_luz">Calle sin luz</option>
+            <option value="zona_sola">Zona muy sola</option>
+            <option value="acoso">Acoso</option>
+            <option value="hurto">Hurto</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="report-desc">Detalle (opcional)</label>
+          <textarea id="report-desc" maxlength="300" placeholder="Ej.: dos postes apagados frente al parque"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Enviar reporte</button>
+      </form>
+    </details>
+
+    <details class="legend">
+      <summary>Qué significa cada cosa en el mapa</summary>
+      <ul class="legend-list">
+        <li><span class="sw sw-safe-route" aria-hidden="true"></span>Ruta segura: línea ámbar continua</li>
+        <li><span class="sw sw-fast-route" aria-hidden="true"></span>Ruta rápida: línea gris punteada</li>
+        <li><span class="sw sw-risk" aria-hidden="true"></span>Zona con poca luz o reportes (círculo con borde discontinuo)</li>
+        <li><span class="sw sw-help" aria-hidden="true"></span>Lugar donde pedir ayuda (CAI, policía, 24 h)</li>
+        <li><span class="sw sw-lamp" aria-hidden="true"></span>Luminaria registrada en OpenStreetMap</li>
+      </ul>
+      <p class="small muted">Las zonas marcadas “demo” son datos de ejemplo, no describen la realidad de ningún barrio.</p>
+      <h2 class="small-title">En lista</h2>
+      <ul id="layer-list" class="layer-list"></ul>
+    </details>
+
+    <p class="disclaimer">Esta herramienta es un apoyo, no una garantía de seguridad. En emergencia llama al <a href="tel:123">123</a>.</p>
+  </section>
+</div>
+<%- include('layout/sos') %>
+<%- include('layout/footer', { scripts: ['/vendor/leaflet/leaflet.js', '/js/alarm.js', '/js/sos.js', '/js/map.js'] }) %>

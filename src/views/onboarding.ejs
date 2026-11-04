@@ -1,0 +1,54 @@
+<%- include('layout/head') %>
+<%- include('layout/header', { bodyClass: 'page-onboarding' }) %>
+<section class="page narrow onboarding" aria-labelledby="ob-title">
+  <p class="eyebrow">Hola, <%= user.name %> · 3 pasos rápidos</p>
+  <h1 id="ob-title" class="visually-hidden">Bienvenida a RutaSegura</h1>
+
+  <ol class="ob-progress" aria-label="Progreso">
+    <li class="is-current" data-dot="1"><span class="visually-hidden">Paso 1</span></li>
+    <li data-dot="2"><span class="visually-hidden">Paso 2</span></li>
+    <li data-dot="3"><span class="visually-hidden">Paso 3</span></li>
+  </ol>
+
+  <form method="post" action="/onboarding">
+    <section class="ob-step" data-step="1" aria-labelledby="s1">
+      <div class="ob-art" aria-hidden="true">
+        <svg viewBox="0 0 220 90" class="ob-routes">
+          <path class="ob-fast" d="M10 70 L210 20"/>
+          <path class="ob-safe-casing" d="M10 70 C 60 80, 90 30, 130 40 S 190 60, 210 20"/>
+          <path class="ob-safe" d="M10 70 C 60 80, 90 30, 130 40 S 190 60, 210 20"/>
+        </svg>
+      </div>
+      <h2 id="s1">Dos rutas, tú eliges</h2>
+      <p>Marca a dónde vas y te mostramos la <strong>ruta rápida</strong> (línea gris punteada) y la <strong>ruta segura</strong> (línea de luz ámbar).</p>
+      <p>El puntaje se ve como <strong>faroles encendidos</strong>: más faroles, más luz, más lugares donde pedir ayuda y mejores calificaciones de otras usuarias.</p>
+      <button type="button" class="btn btn-primary btn-block" data-next="2">Siguiente</button>
+    </section>
+
+    <section class="ob-step" data-step="2" aria-labelledby="s2">
+      <div class="ob-art" aria-hidden="true"><span class="sos-demo"><svg class="icon"><use href="#i-phone"/></svg> Ayuda</span></div>
+      <h2 id="s2">Si necesitas ayuda, un toque</h2>
+      <p>El botón rojo <strong>Ayuda</strong> está siempre abajo a la derecha. Al tocarlo tienes 3 segundos para cancelar; luego llamamos al <strong>123</strong> y avisamos a tus contactos de confianza.</p>
+      <p class="notice notice-info"><strong>Sube el volumen antes de salir.</strong> La alarma sonora suena al volumen que tenga tu celular: una página web no puede subirlo sola.</p>
+      <div class="ob-actions">
+        <button type="button" class="btn btn-ghost" data-next="1">Atrás</button>
+        <button type="button" class="btn btn-primary" data-next="3">Siguiente</button>
+      </div>
+    </section>
+
+    <section class="ob-step" data-step="3" aria-labelledby="s3">
+      <h2 id="s3">Tu ubicación, tu decisión</h2>
+      <p>Usamos tu ubicación solo para trazar la ruta desde donde estás y, si tú lo activas, para que un contacto te siga durante el recorrido. El enlace vence en 2 horas.</p>
+      <div class="field field-check">
+        <input id="consentLocation" name="consentLocation" type="checkbox">
+        <label for="consentLocation">Autorizo usar mi ubicación durante mis recorridos (puedo cambiarlo en “Mi red”). <a href="/privacidad" target="_blank" rel="noopener">Cómo cuidamos tus datos</a></label>
+      </div>
+      <p class="muted small">Si no autorizas, igual puedes marcar el origen tocando el mapa.</p>
+      <div class="ob-actions">
+        <button type="button" class="btn btn-ghost" data-next="2">Atrás</button>
+        <button type="submit" class="btn btn-primary">Empezar</button>
+      </div>
+    </section>
+  </form>
+</section>
+<%- include('layout/footer', { scripts: ['/js/onboarding.js'] }) %>

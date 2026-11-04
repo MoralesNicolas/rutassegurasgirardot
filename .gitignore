@@ -1,0 +1,6 @@
+node_modules/
+.env
+*.log
+.vscode/
+deploy.zip
+azure-settings.local.json

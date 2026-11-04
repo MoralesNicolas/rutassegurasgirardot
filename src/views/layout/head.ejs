@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0E1A1F">
+  <meta name="description" content="RutaSegura Girardot: compara la ruta rápida con la más segura para caminar de noche y pide ayuda con un toque.">
+  <title><%= title %> · RutaSegura Girardot</title>
+  <link rel="icon" href="/img/icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,700&display=swap">
+  <% if (typeof leaflet !== 'undefined' && leaflet) { %>
+  <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+  <% } %>
+  <link rel="stylesheet" href="/css/styles.css">
+  <!-- Aplica el tema guardado antes de pintar (evita parpadeo) -->
+  <script src="/js/theme.js"></script>
+</head>

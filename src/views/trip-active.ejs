@@ -1,0 +1,43 @@
+<%- include('layout/head') %>
+<%- include('layout/header', { bodyClass: 'page-trip' }) %>
+<div class="map-layout">
+  <div id="trip-map" class="map" role="region" aria-label="Mapa de tu recorrido"
+    data-geometry="<%= JSON.stringify(trip.geometry) %>" data-type="<%= trip.route_type %>"></div>
+
+  <section class="route-panel" aria-labelledby="trip-title">
+    <p class="eyebrow"><%= trip.route_type === 'safe' ? 'Ruta segura' : 'Ruta rápida' %> · <%= trip.status === 'active' ? 'en curso' : 'terminado' %></p>
+    <h1 id="trip-title" class="panel-title">Vas hacia <%= trip.dest_label || 'tu destino' %></h1>
+
+    <% if (trip.status === 'active' || trip.status === 'alert') { %>
+    <p class="status" id="trip-status" role="status" aria-live="polite">Te acompañamos. Cuando llegues, pulsa «Llegué bien».</p>
+    <dl class="trip-facts">
+      <div><dt>Puntaje</dt><dd><%= trip.safety_score %>/100</dd></div>
+      <div><dt>Tiempo</dt><dd><%= Math.max(1, Math.round(trip.duration_s / 60)) %> min</dd></div>
+      <div><dt>Distancia</dt><dd><%= (trip.distance_m / 1000).toFixed(1).replace('.', ',') %> km</dd></div>
+    </dl>
+    <% if (!contacts) { %>
+    <p class="notice notice-info">Aún no tienes contactos de confianza. <a href="/contacts">Agrega uno</a> para que reciba tu alerta si pides ayuda.</p>
+    <% } %>
+    <div class="stack">
+      <button type="button" id="arrived" class="btn btn-primary btn-block" data-trip="<%= trip.id %>" data-inactivity="<%= inactivityMinutes %>">
+        <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Llegué bien
+      </button>
+      <button type="button" id="alarm-toggle" class="btn btn-ghost btn-block" aria-pressed="false">Sonar alarma</button>
+      <button type="button" id="cancel-trip" class="btn btn-ghost btn-block">Cancelar recorrido</button>
+    </div>
+    <p class="muted small">Deja esta pantalla abierta: la mantenemos encendida y seguimos tu posición en el mapa. Si pasan <%= inactivityMinutes %> min sin que toques la pantalla, te preguntaremos si estás bien (puedes cambiarlo en «Mi red»). Si el celular bloquea el navegador en segundo plano, el seguimiento se pausa.</p>
+    <dialog class="sos-dialog" id="ok-dialog" aria-labelledby="ok-title">
+      <h2 id="ok-title">¿Estás bien?</h2>
+      <p id="ok-msg">Si no respondes, avisaremos a tus contactos.</p>
+      <p class="countdown" id="ok-count" aria-live="assertive">20</p>
+      <button type="button" class="btn btn-primary btn-block" id="im-ok">Estoy bien</button>
+    </dialog>
+    <% } else { %>
+    <p class="notice notice-ok">Este recorrido ya terminó.</p>
+    <a class="btn btn-primary" href="/trip/<%= trip.id %>/rate">Calificar el recorrido</a>
+    <% } %>
+    <p class="disclaimer">Esta herramienta es un apoyo, no una garantía de seguridad. En emergencia llama al <a href="tel:123">123</a>.</p>
+  </section>
+</div>
+<%- include('layout/sos', { tripId: trip.id }) %>
+<%- include('layout/footer', { scripts: ['/vendor/leaflet/leaflet.js', '/js/alarm.js', '/js/sos.js', '/js/trip.js'] }) %>

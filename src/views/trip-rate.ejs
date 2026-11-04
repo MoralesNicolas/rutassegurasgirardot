@@ -1,0 +1,32 @@
+<%- include('layout/head') %>
+<%- include('layout/header') %>
+<section class="page narrow" aria-labelledby="rate-title">
+  <p class="eyebrow">Llegaste a <%= trip.dest_label || 'tu destino' %></p>
+  <h1 id="rate-title">¿Qué tan segura te sentiste?</h1>
+  <p class="lead">Tu calificación es anónima y mejora el puntaje de estas calles para otras mujeres.</p>
+
+  <form method="post" action="/trip/<%= trip.id %>/rate" class="card stack">
+    <fieldset class="stars<%= errors.stars ? ' has-error' : '' %>" <% if (errors.stars) { %>aria-describedby="stars-error"<% } %>>
+      <legend>Califica el recorrido</legend>
+      <div class="stars-row">
+        <% const labels = ['Muy insegura', 'Insegura', 'Normal', 'Segura', 'Muy segura']; %>
+        <% for (let i = 1; i <= 5; i++) { %>
+        <input type="radio" id="star-<%= i %>" name="stars" value="<%= i %>" required>
+        <label for="star-<%= i %>">
+          <svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>
+          <span><%= i %> · <%= labels[i - 1] %></span>
+        </label>
+        <% } %>
+      </div>
+      <% if (errors.stars) { %><p class="field-error" id="stars-error"><%= errors.stars %></p><% } %>
+    </fieldset>
+    <div class="field">
+      <label for="comment">¿Algo que debamos saber? (opcional)</label>
+      <textarea id="comment" name="comment" maxlength="500" aria-describedby="comment-hint" placeholder="Ej.: el parque estaba oscuro, pero había gente en la tienda de la esquina"></textarea>
+      <p class="field-hint" id="comment-hint">No escribas nombres ni datos de otras personas.</p>
+    </div>
+    <button type="submit" class="btn btn-primary btn-block">Guardar calificación</button>
+    <a class="btn btn-ghost btn-block" href="/history">Ahora no</a>
+  </form>
+</section>
+<%- include('layout/footer') %>
