@@ -4,7 +4,7 @@ Aplicación web para que las mujeres que caminan de noche en Girardot comparen l
 
 > Esta herramienta es un apoyo, no una garantía de seguridad. En emergencia llama al **123**.
 
-**URL de despliegue:** https://rutasegura-girardot.azurewebsites.net *(Azure App Service F1; la primera carga puede tardar ~30 s)*
+**URL de despliegue:** https://rutassegurasgirardot.onrender.com *(Render Free, región Ohio; si estuvo inactiva, la primera carga puede tardar ~50 s)*
 
 ## Requisitos
 - Node.js 20 o superior (probado con Node 24 en local y Node 22 en Azure)
@@ -52,10 +52,13 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"   # DAT
 5. El botón rojo **Ayuda** está siempre visible: 3 s para cancelar, luego llama al 123 y avisa a tus contactos.
 6. En el mapa puedes **reportar un problema**; la cuenta admin lo aprueba en **Moderar**.
 
-## Despliegue en Azure (App Service, Linux, Node 22, plan F1)
-1. Crea la Web App desde VS Code (*Azure App Service: Create New Web App... (Advanced)*) en una región permitida para Azure for Students (usamos **East US 2**).
-2. En *Configuración → Variables de entorno* agrega: `NODE_ENV=production`, `DATABASE_URL`, `JWT_SECRET`, `DATA_KEY` (la misma de la BD), `APP_URL`, `DEFAULT_CITY=girardot`, `SCM_DO_BUILD_DURING_DEPLOYMENT=true`.
-3. Clic derecho sobre la app → **Deploy to Web App**. `.vscode/settings.json` excluye `node_modules` y `.env` del paquete.
+## Despliegue
+**Producción actual: Render** (Web Service gratuito, región Ohio, la misma zona de AWS que la base de Neon).
+1. Sube el repositorio a GitHub y en Render crea un **Web Service** con *Build* `npm install` y *Start* `npm start`.
+2. Variables de entorno: `NODE_ENV=production`, `DATABASE_URL`, `JWT_SECRET`, `JWT_EXPIRES_IN=2h`, `DATA_KEY` (la misma con la que se cifraron los datos), `DEFAULT_CITY=girardot`, `APP_URL`.
+3. Cada `git push` a `main` vuelve a desplegar automáticamente.
+
+**Azure App Service (intentado primero):** la configuración queda lista en `.vscode/settings.json`, que excluye `node_modules` y `.env` del paquete. La suscripción *Azure for Students* bloqueó la creación por política de regiones y, en la región permitida, por **cuota 0** para los planes F1 y B1 (ver `docs/ARQUITECTURA.md`, sección 8). Cuando se amplíe la cuota, basta con crear la Web App (Linux, Node 22), cargar las mismas variables más `SCM_DO_BUILD_DURING_DEPLOYMENT=true` y usar *Deploy to Web App*.
 
 ## Documentación
 - [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md): arquitectura y decisiones técnicas

@@ -4,3 +4,4 @@ node_modules/
 .vscode/
 deploy.zip
 azure-settings.local.json
+render.env.local

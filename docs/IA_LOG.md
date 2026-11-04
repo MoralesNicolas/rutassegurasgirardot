@@ -54,8 +54,44 @@
 - **Qué generó la IA:** temporizador en `trip.js` que se reinicia con cada toque, diálogo "¿Estás bien?" con 20 s, alarma (el audio se "arma" con el primer toque porque el navegador lo exige) y alerta automática con `reason = 'inactividad'`.
 - **Evaluación crítica:** si el navegador queda en segundo plano, el temporizador puede pausarse. Queda documentado como limitación.
 
+### Fase 8 — Despliegue
+- **Prompts relevantes:** "al momento de crear la app en azure me apareció esto", "cuál de estos selecciono", "me aparece ahora esto" (con capturas de los errores).
+- **Qué hizo la IA:** guió la creación en Azure paso a paso. Interpretó cada error: primero la política de regiones de Azure for Students, luego la **cuota 0** de F1 y de B1. Propuso Render como plan B, preparó el commit y el push (verificando que `.env` no se subiera) y generó un archivo local con las variables de entorno para no copiarlas a mano.
+- **Qué decidió el equipo:** intentar Azure primero (lo pide el reglamento), revisar la política de la suscripción sin modificarla, crear un repositorio **privado** en GitHub y aceptar Render como alternativa declarada.
+- **Pruebas en producción:** login por API, cookie `Secure` + `httpOnly`, cabeceras HSTS y CSP, capas, cálculo de ruta real (OSRM) y todas las pantallas con 200.
+- **Evaluación crítica:** la IA supuso al principio que la región "East US 2" estaba permitida y tuvo que corregirse con la lista real de la política. Los errores de cuota de Azure no se podían resolver en el tiempo disponible; se documentaron con honestidad en lugar de ocultarlos.
+
 ### Fase 7 (adelantada) — Reportes y moderación (segundo rol)
 - **Motivo:** el reglamento exige al menos 2 roles con permisos distintos.
 - **Qué generó la IA:** reporte anónimo de problemas desde el mapa (`POST /api/incidents`, estado `pending`) y panel `/admin/incidents` donde la administradora aprueba (crea una zona `comunidad`) o rechaza.
 - **Pruebas hechas:** la usuaria recibe 403 en moderación; la admin aprueba y aparece la zona; un `<script>` en la descripción se muestra escapado (XSS mitigado).
 - **Evaluación crítica:** la moderación humana evita que un reporte malicioso o difamatorio marque un sector como peligroso.
+
+## Resumen de herramientas
+| Herramienta | Para qué | Prompt relevante | Resultado | Qué corregimos o rechazamos |
+|---|---|---|---|---|
+| Claude Code (Opus 5.5) | Plan, código MVC, pruebas, documentación y guía de despliegue | "leee claude.md" + "dale" | App completa con 11 pruebas unitarias | Fórmula del puntaje, OSRM en carro → peatonal, comando destructivo bloqueado, Azure → Render |
+| Claude Code | Explicar Neon y PostgreSQL en la nube | "qué es ese neon.tech?" | BD en la nube sin instalar nada | Descartamos instalar la CLI de Neon; la URL no se pegó en el chat |
+| Claude Code | Interpretar errores de Azure | Capturas de los errores | Diagnóstico de política de regiones y cuota 0 | No modificamos la política de la cuenta; usamos el plan B |
+| [Otras IA que haya usado el equipo] | [completar] | [completar] | [completar] | [completar] |
+
+## Marco Ético para la IA en Colombia (2021): cómo lo aplicamos
+| Principio | Cómo se aplicó |
+|---|---|
+| Transparencia y explicación | Todo uso de IA está aquí y en `registro-ia/`. La app explica **por qué** recomienda una ruta y cómo se calcula el puntaje. |
+| Privacidad | Consentimiento explícito de ubicación, contactos cifrados, borrado de cuenta y ningún dato real ni secreto compartido con la IA. |
+| Control humano de las decisiones | La IA propone y el equipo decide (nube, BD, fórmula). En la app, la usuaria elige la ruta y una persona modera cada reporte. |
+| Seguridad | OWASP Top 10 aplicado y probado: rate limit, CSP, IDOR, XSS, cifrado y HTTPS. |
+| Responsabilidad | El equipo revisó y probó cada fase y responde por el código entregado. |
+| No discriminación | La explicación de la ruta describe factores y nunca barrios; los datos de riesgo son demo y declarados como tales. |
+| Inclusión | WCAG 2.1 AA, tipografía para baja visión, uso con una mano, modo noche y alternativas textuales al mapa. |
+| Prevalencia de los derechos de niñas, niños y adolescentes | La app es para mujeres adultas y no recoge datos de menores. Una versión para adolescentes exigiría consentimiento de acudientes. |
+| Beneficio social | Atiende el ODS 5 y el ODS 11: moverse de noche con más información y acompañamiento, a costo $0 y replicable en otros municipios. |
+
+## Reflexión final
+- **Dónde la IA ayudó más:** acelerar el andamiaje MVC, la seguridad repetitiva (validaciones, cabeceras, cifrado) y la documentación. También detectó errores que no habríamos visto a tiempo, como que el OSRM público solo calcula rutas en carro o que una pantalla prometía una función inexistente.
+- **Dónde ayudó menos:** supuso regiones de Azure sin conocer la política real de la cuenta. La configuración externa (Azure, GitHub, Render) siempre necesitó verificación humana.
+- **Riesgos éticos de este proyecto y cómo los mitigamos:**
+  - *Estigmatización de zonas:* la explicación describe factores, hay moderación humana y los datos son demo declarados.
+  - *Privacidad de la ubicación:* consentimiento explícito, sin rastreo continuo guardado y borrado de cuenta disponible.
+  - *Falsa sensación de seguridad:* el aviso "apoyo, no garantía; en emergencia llama al 123" aparece en todas las pantallas clave.

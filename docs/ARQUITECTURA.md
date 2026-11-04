@@ -31,10 +31,10 @@ flowchart LR
 - **Servicios (`src/services`)**: lógica de negocio y APIs externas. El cálculo del puntaje son **funciones puras** con pruebas unitarias.
 
 **Stack y por qué:**
-- **Node 22 + Express 4**: es ligero y el equipo lo conoce.
+- **Node + Express 4**: es ligero y el equipo lo conoce.
 - **EJS**: con renderizado en el servidor la página funciona con poca conexión y no hace falta un framework de frontend.
 - **PostgreSQL en Neon**: es el motor que exige el ciclo, tiene capa gratuita y no hay que instalarlo.
-- **Azure App Service F1**: es la nube que pide el reglamento, en su capa gratuita.
+- **Render**: nube con capa gratuita y despliegue desde GitHub. Se intentó Azure primero; ver la sección 8.
 
 ## 3. Modelo de datos
 13 tablas (`db/schema.sql`):
@@ -86,7 +86,7 @@ Se usan coordenadas lat/lng sin PostGIS, con distancias calculadas por haversine
 | Riesgo | Implementado |
 |---|---|
 | A01 Control de acceso | ✔ `requireAuth` y `requireRole('admin')` en el servidor. Toda consulta de recorridos y contactos filtra por `user_id` (IDOR probado: 404). Los `:id` solo aceptan dígitos |
-| A02 Criptografía | ✔ bcrypt (costo 11). JWT HS256 de 2 h en cookie `httpOnly`, `sameSite=strict` y `secure` en producción. **Teléfono y correo de contactos cifrados con AES-256-GCM** (clave `DATA_KEY` en variables de entorno). HTTPS en Azure. Neon con `sslmode=verify-full` |
+| A02 Criptografía | ✔ bcrypt (costo 11). JWT HS256 de 2 h en cookie `httpOnly`, `sameSite=strict` y `secure` en producción (verificado en Render). **Teléfono y correo de contactos cifrados con AES-256-GCM** (clave `DATA_KEY` en variables de entorno). HTTPS con HSTS. Neon con `sslmode=verify-full` |
 | A03 Inyección | ✔ Solo consultas parametrizadas. `express-validator` en cada entrada (coordenadas numéricas, tipos en lista blanca, longitudes máximas). Salida escapada en EJS (XSS probado) |
 | A04 Diseño inseguro | ✔ Consentimiento explícito de ubicación, minimización de datos, reportes con moderación previa y aviso de "apoyo, no garantía" |
 | A05 Configuración | ✔ `helmet` con CSP estricta (sin scripts *inline*), CORS restringido a `APP_URL`, sin *stack traces* hacia la usuaria y `.env` fuera del repositorio y del paquete de despliegue |
@@ -128,7 +128,9 @@ Se usan coordenadas lat/lng sin PostGIS, con distancias calculadas por haversine
 ## 8. Escalabilidad y sostenibilidad
 - **Otros municipios:** basta con insertar una fila en `cities` (centro y recuadro) y ejecutar `npm run osm:sync`. El código no tiene a Girardot "quemado".
 - **Escala técnica:** el servidor no guarda estado (JWT), así que se pueden agregar instancias en Azure sin cambios. Para crecer: PostGIS con índices espaciales, caché de rutas frecuentes y una cola para notificaciones.
-- **Costo actual: $0** (Azure F1 + Neon Free + APIs abiertas). Límites: F1 da 60 min de CPU al día y se suspende por inactividad; ORS permite 2.000 rutas al día gratis.
+- **Despliegue:** https://rutassegurasgirardot.onrender.com, en **Render** (Web Service gratuito, región Ohio, la misma zona de AWS que Neon) con despliegue automático desde GitHub.
+  - **Por qué no Azure:** se intentó primero, porque el reglamento pide AWS, GCP o Azure. La suscripción *Azure for Students* rechazó East US, East US 2 y otras regiones por la política *"Allowed resource deployment regions"*. En la región permitida, la creación falló por **cuota 0 de máquinas F1 y B1** (*"Operation cannot be completed without additional quota"*), y ampliar la cuota requiere una solicitud a soporte que no cabía en las 2,5 h. Se usó Render como alternativa declarada. La app no depende del proveedor: migrarla a Azure App Service es cargar las mismas variables de entorno.
+- **Costo actual: $0** (Render Free + Neon Free + APIs abiertas). Límites: Render Free se suspende tras 15 min sin uso (primer arranque de unos 50 s); ORS permite 2.000 rutas al día gratis.
 - **Sostenibilidad social:** alianzas con la Alcaldía, la Secretaría de la Mujer y la Policía para reemplazar los datos demo por datos oficiales, y con universidades para moderar reportes.
 
 ## 9. Limitaciones honestas

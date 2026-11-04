@@ -1,7 +1,7 @@
 # Guion de sustentación · RutaSegura Girardot (10 min + 5 de preguntas)
 
 > La sustentación **se graba** y los jurados externos deciden con ese video: hablen claro, muestren la pantalla grande y hagan la demo con el celular en modo responsive (F12 → 390 px) o en un celular real proyectado.
-> **Antes de empezar:** abran la URL de Azure 2 minutos antes (F1 "despierta" en ~30 s), dejen la sesión de Laura cerrada y suban el volumen.
+> **Antes de empezar:** abran https://rutassegurasgirardot.onrender.com 2 minutos antes (Render Free "despierta" en ~50 s), dejen la sesión de Laura cerrada y suban el volumen.
 
 ## 0:00–1:00 · Problema (Integrante 1)
 - "Una estudiante sale de clase a las 9 p. m. en Girardot. Google Maps le muestra la ruta **más rápida**, no la que tiene **más luz y más gente**."
@@ -18,7 +18,7 @@
 
 ## 5:00–7:00 · Arquitectura y APIs (Integrante 3)
 - Diagrama MVC de `docs/ARQUITECTURA.md`: los modelos tienen el SQL, los controladores no; los servicios hacen el puntaje y las APIs externas.
-- PostgreSQL en **Neon** + **Azure App Service F1** (costo $0) + JWT.
+- PostgreSQL en **Neon** + **Render** (costo $0) + JWT. Si preguntan por Azure: "lo intentamos primero; la cuenta de estudiante tiene cuota 0 de App Service en las regiones permitidas (mostrar captura) y lo documentamos como alternativa declarada".
 - APIs: **OSRM peatonal (FOSSGIS)** y ORS, **Overpass** (datos abiertos OSM) y **Nominatim**. Cada una tiene un plan B si falla.
 - Puntaje (`safetyScoreService`): funciones puras con **11 pruebas unitarias** (correr `npm test` si hay tiempo). Penaliza por metro expuesto a zonas, premia la cercanía a lugares de ayuda, suma la calificación comunitaria y castiga los desvíos largos. Si la mejor ruta todavía cruza una zona, pide **rutas de desvío** alrededor de ella.
 
