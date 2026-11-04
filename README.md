@@ -61,8 +61,9 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"   # DAT
 **Azure App Service (intentado primero):** la configuración queda lista en `.vscode/settings.json`, que excluye `node_modules` y `.env` del paquete. La suscripción *Azure for Students* bloqueó la creación por política de regiones y, en la región permitida, por **cuota 0** para los planes F1 y B1 (ver `docs/ARQUITECTURA.md`, sección 8). Cuando se amplíe la cuota, basta con crear la Web App (Linux, Node 22), cargar las mismas variables más `SCM_DO_BUILD_DURING_DEPLOYMENT=true` y usar *Deploy to Web App*.
 
 ## Documentación
-- [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md): arquitectura y decisiones técnicas
-- [docs/IA_LOG.md](docs/IA_LOG.md): uso de inteligencia artificial
+- **[docs/RutaSegura_Girardot.pdf](docs/RutaSegura_Girardot.pdf): documento oficial de entrega** (arquitectura, decisiones técnicas y uso de IA)
+- [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md) y [docs/IA_LOG.md](docs/IA_LOG.md): versiones de trabajo en Markdown
 - [docs/SUSTENTACION.md](docs/SUSTENTACION.md): guion de la presentación
+- [registro-ia/](registro-ia/): registro automático de cada prompt y de cada archivo modificado con IA
 
 Mapa y datos © colaboradores de [OpenStreetMap](https://www.openstreetmap.org/copyright). Las zonas marcadas "demo" son datos de ejemplo.
