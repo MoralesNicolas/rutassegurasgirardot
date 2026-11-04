@@ -18,6 +18,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 // A05: cabeceras seguras y política de contenido (solo recursos de orígenes conocidos)
 app.use(helmet({
+  // OpenStreetMap exige el Referer para servir teselas (con 'no-referrer' responde 403).
+  // Esta política solo envía el dominio, nunca la ruta ni datos de la página.
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],

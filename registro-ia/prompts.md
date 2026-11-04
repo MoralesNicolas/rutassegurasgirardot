@@ -184,3 +184,22 @@ dame el zip de entraga con el documento que pedia los lineamientos
 
 - **Resultado:** 
 - **¿Lo aceptamos, corregimos o rechazamos? ¿Por qué?:** 
+
+### 4/11/2026, 10:25:09 — Claude Code (sesión 7631d173)
+
+```text
+estoy viendo que utilizas datos demo, como puedo cambiar eso? con el api de openstreet map?
+```
+
+- **Resultado:** 
+- **¿Lo aceptamos, corregimos o rechazamos? ¿Por qué?:** 
+
+### 4/11/2026, 10:27:04 — Claude Code (sesión 7631d173)
+
+```text
+<ide_opened_file>The user opened the file c:\Users\pc\Documents\Nueva carpeta\docs\IA_LOG.md in the IDE. This may or may not be related to the current task.</ide_opened_file>
+y tambien corrije esto  en celular s se ve pero en la web no
+```
+
+- **Resultado:** 
+- **¿Lo aceptamos, corregimos o rechazamos? ¿Por qué?:** 

@@ -61,6 +61,12 @@
 - **Pruebas en producción:** login por API, cookie `Secure` + `httpOnly`, cabeceras HSTS y CSP, capas, cálculo de ruta real (OSRM) y todas las pantallas con 200.
 - **Evaluación crítica:** la IA supuso al principio que la región "East US 2" estaba permitida y tuvo que corregirse con la lista real de la política. Los errores de cuota de Azure no se podían resolver en el tiempo disponible; se documentaron con honestidad en lugar de ocultarlos.
 
+### Corrección detectada por el equipo — Mapa bloqueado (403)
+- **Prompt:** "y también corrige esto, en celular sí se ve pero en la web no" (captura con teselas "Access blocked").
+- **Causa:** `helmet` envía por defecto `Referrer-Policy: no-referrer` y la política de uso de teselas de OpenStreetMap exige el Referer. En el celular se veía por la caché.
+- **Corrección:** `strict-origin-when-cross-origin`, que envía solo el dominio y nunca la ruta ni datos de la página.
+- **Evaluación crítica:** la IA aplicó una configuración "más segura" sin prever su efecto sobre un servicio externo. Lo detectó la **revisión humana** en el navegador de escritorio, y por eso son necesarias las pruebas manuales.
+
 ### Fase 7 (adelantada) — Reportes y moderación (segundo rol)
 - **Motivo:** el reglamento exige al menos 2 roles con permisos distintos.
 - **Qué generó la IA:** reporte anónimo de problemas desde el mapa (`POST /api/incidents`, estado `pending`) y panel `/admin/incidents` donde la administradora aprueba (crea una zona `comunidad`) o rechaza.
