@@ -30,7 +30,11 @@
       <h2 id="ok-title">¿Estás bien?</h2>
       <p id="ok-msg">Si no respondes, avisaremos a tus contactos.</p>
       <p class="countdown" id="ok-count" aria-live="assertive">20</p>
-      <button type="button" class="btn btn-primary btn-block" id="im-ok">Estoy bien</button>
+      <ul id="ok-contacts" class="sos-actions plain-list"></ul>
+      <div class="sos-actions">
+        <button type="button" class="btn btn-primary btn-block" id="im-ok">Estoy bien</button>
+        <a class="btn btn-danger btn-block" href="tel:123">Llamar al 123</a>
+      </div>
     </dialog>
     <% } else { %>
     <p class="notice notice-ok">Este recorrido ya terminó.</p>

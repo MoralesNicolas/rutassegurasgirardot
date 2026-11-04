@@ -1,4 +1,22 @@
-// Botón de ayuda: 1 toque → 3 s para cancelar → registra la alerta, avisa contactos y abre tel:123
+// Botones "Avisar por WhatsApp" con el mensaje y la ubicación ya escritos.
+// Una web no puede enviar WhatsApp sola: la usuaria confirma con un toque. También lo usa trip.js.
+function renderContacts(list, data) {
+  list.innerHTML = '';
+  data.contacts.forEach((c) => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.className = 'btn btn-ghost btn-block';
+    a.href = `https://wa.me/${c.phone.replace(/\D/g, '').replace(/^3/, '573')}?text=${encodeURIComponent(data.message)}`;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = `Avisar por WhatsApp a ${c.name}`;
+    li.appendChild(a);
+    list.appendChild(li);
+  });
+}
+window.RSRenderContacts = renderContacts;
+
+// Botón de ayuda: 1 toque → 3 s para cancelar → alarma, registra la alerta, avisa contactos y abre tel:123
 (function () {
   const btn = document.getElementById('sos-btn');
   const dialog = document.getElementById('sos-dialog');
@@ -27,6 +45,7 @@
 
   async function sendAlert() {
     clearInterval(timer);
+    startAlarm();
     $('sos-counting').hidden = true;
     $('sos-done').hidden = false;
     $('sos-result').textContent = 'Registrando tu alerta…';
@@ -43,26 +62,23 @@
       $('sos-result').textContent = d.notified
         ? `Alerta registrada. Avisamos a ${d.notified} contacto(s)${d.simulated ? ' (envío simulado en esta demo)' : ''}. Escríbeles también desde aquí:`
         : 'Alerta registrada. Aún no tienes contactos de confianza: agrégalos en «Mi red».';
-      const list = $('sos-contacts');
-      list.innerHTML = '';
-      d.contacts.forEach((c) => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.className = 'btn btn-ghost btn-block';
-        a.href = `https://wa.me/${c.phone.replace(/\D/g, '').replace(/^3/, '573')}?text=${encodeURIComponent(d.message)}`;
-        a.target = '_blank';
-        a.rel = 'noopener';
-        a.textContent = `Avisar por WhatsApp a ${c.name}`;
-        li.appendChild(a);
-        list.appendChild(li);
-      });
+      renderContacts($('sos-contacts'), d);
     } catch (err) {
       $('sos-result').textContent = 'No pudimos registrar la alerta (sin conexión). Llama al 123 ahora.';
     }
     window.location.href = 'tel:123';
   }
 
+  // Alarma automática al confirmar la alerta (el audio se "armó" con el toque en el botón Ayuda)
+  function startAlarm() {
+    if (!window.RSAlarm) return;
+    window.RSAlarm.start();
+    $('sos-alarm').setAttribute('aria-pressed', 'true');
+    $('sos-alarm').textContent = 'Detener alarma';
+  }
+
   btn.addEventListener('click', () => {
+    if (window.RSAlarm) window.RSAlarm.arm();
     reset();
     dialog.showModal();
     $('sos-cancel').focus();

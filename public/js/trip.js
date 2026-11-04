@@ -80,6 +80,7 @@
     let n = 20;
     $('ok-count').textContent = String(n);
     $('ok-msg').textContent = 'Si no respondes, avisaremos a tus contactos.';
+    $('ok-contacts').innerHTML = '';
     okDialog.showModal();
     window.RSAlarm.start();
     answerTimer = setInterval(async () => {
@@ -89,12 +90,17 @@
       clearInterval(answerTimer);
       $('ok-msg').textContent = 'No respondiste: estamos avisando a tus contactos.';
       try {
-        await fetch('/api/alerts/emergency', {
+        const res = await fetch('/api/alerts/emergency', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tripId, reason: 'inactividad' })
+          body: JSON.stringify({ tripId, reason: 'inactividad', lat: me ? me.getLatLng().lat : undefined, lng: me ? me.getLatLng().lng : undefined })
         });
-        $('ok-msg').textContent = 'Avisamos a tus contactos. Si estás bien, pulsa el botón.';
+        const json = await res.json();
+        if (!json.ok) throw new Error(json.error);
+        $('ok-msg').textContent = json.data.contacts.length
+          ? 'Alerta registrada. Avisa a tu gente con un toque:'
+          : 'Alerta registrada. Aún no tienes contactos: agrégalos en «Mi red». Si necesitas ayuda, llama al 123.';
+        if (window.RSRenderContacts) window.RSRenderContacts($('ok-contacts'), json.data);
       } catch (err) {
         $('ok-msg').textContent = 'Sin conexión. Si necesitas ayuda, llama al 123.';
       }
