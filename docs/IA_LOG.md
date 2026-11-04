@@ -1,7 +1,7 @@
 # Registro de uso de Inteligencia Artificial
 
-**Herramienta:** Claude Code (modelo Claude Opus 5.5, extensión de VS Code)
-**Equipo:** [nombres del equipo]  ·  **Fecha:** 4-nov-2026
+**Herramientas:** Claude en el chat web de claude.ai (planeación) y Claude Code (modelo Claude Opus 5.5, extensión de VS Code; desarrollo)
+**Equipo:** Nicolás Morales Morales · Iván David Miranda · Andrés Eduardo Jiménez Sabogal  ·  **Fecha:** 4-nov-2026
 **Registro automático:** cada prompt quedó guardado en `registro-ia/prompts.md` y cada archivo tocado en `registro-ia/archivos.md`.
 
 ## Principios que aplicamos (Marco Ético para la IA en Colombia, 2021)
@@ -12,6 +12,14 @@
 - **Responsabilidad:** el equipo responde por la calidad, originalidad y funcionamiento.
 
 ## Entradas
+
+### Planeación — Claude (chat web, claude.ai)
+- **Insumos del equipo:** el documento de lineamientos de la maratón (`maraton.docx`), la problemática sorteada y la **idea de solución del equipo**.
+- **Prompt 1:** "Bueno claude tengo esta problemática estoy en una maratón de programación. Lo que te mandé están los lineamientos, somos del ciclo de profundización 4-6 semestre. Quiero que leas la problemática y mires mi idea, y ayúdame a estructurarlo, ten en cuenta el modelo vista controlador. Si ves que faltan agregarle más dímelo."
+- **Prompt 2:** "En base a todo lo que me dices estructúrame todo para montarlo a Claude Code. Está permitido el uso de la IA siempre y cuando sea justificada con los prompts. Dame un archivo con todo listo para pasarlo a Claude Code y que empiece a trabajar."
+- **Qué generó la IA:** el archivo `CLAUDE.md`, con el contexto, el stack, la estructura MVC, el modelo de datos, la API, la fórmula del puntaje, el checklist OWASP, el plan por fases y la plantilla de este registro.
+- **Qué revisó o corrigió el equipo:** la idea y el enfoque (ruta segura vs. ruta rápida, botón de ayuda, calificación comunitaria) son del equipo. Durante el desarrollo se cambiaron tres decisiones del `CLAUDE.md`: el despliegue (Render → intento en Azure, por el reglamento), la fórmula del puntaje (normalizada → por metro expuesto) y el cronograma (2,5 h → comprimido según la hora real).
+- **Evaluación crítica:** el plan suponía 2,5 h de desarrollo y una nube (Render) que no es la que pide el reglamento. Hubo que contrastarlo con los lineamientos oficiales.
 
 ### Fase 0 — Andamiaje
 - **Prompt / instrucción relevante:** "leee claude.md" → la IA leyó el `CLAUDE.md` del equipo y propuso un plan ajustado a la hora real (09:07). Respuesta del equipo: "en azure, y dale".
@@ -79,7 +87,7 @@
 | Claude Code (Opus 5.5) | Plan, código MVC, pruebas, documentación y guía de despliegue | "leee claude.md" + "dale" | App completa con 11 pruebas unitarias | Fórmula del puntaje, OSRM en carro → peatonal, comando destructivo bloqueado, Azure → Render |
 | Claude Code | Explicar Neon y PostgreSQL en la nube | "qué es ese neon.tech?" | BD en la nube sin instalar nada | Descartamos instalar la CLI de Neon; la URL no se pegó en el chat |
 | Claude Code | Interpretar errores de Azure | Capturas de los errores | Diagnóstico de política de regiones y cuota 0 | No modificamos la política de la cuenta; usamos el plan B |
-| [Otras IA que haya usado el equipo] | [completar] | [completar] | [completar] | [completar] |
+| Claude (chat web, claude.ai) | Leer los lineamientos y la idea del equipo, estructurar el proyecto en MVC | "Quiero que leas la problemática y mires mi idea y ayúdame a estructurarlo…" / "Dame un archivo con todo listo para pasarlo a Claude Code" | `CLAUDE.md` con el plan completo | Nube, fórmula y cronograma ajustados durante el desarrollo |
 
 ## Marco Ético para la IA en Colombia (2021): cómo lo aplicamos
 | Principio | Cómo se aplicó |

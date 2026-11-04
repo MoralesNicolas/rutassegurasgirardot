@@ -118,12 +118,11 @@ Se usan coordenadas lat/lng sin PostGIS, con distancias calculadas por haversine
 - Pedir ayuda toma **1 toque** (con 3 s para cancelar). Trazar una ruta toma **3 toques**: origen, destino y "Trazar".
 - **Control de inactividad:** durante el recorrido, si pasan N minutos sin interacción (configurable de 1 a 60), aparece "¿Estás bien?" con alarma. Si no hay respuesta en 20 s, se envía la alerta con `reason = 'inactividad'`.
 
-**Prueba de usabilidad** (a completar por el equipo con un compañero de otro equipo):
-| Tarea | Tiempo | Problemas observados | Corrección aplicada |
-|---|---|---|---|
-| Trazar una ruta segura | [completar] | [completar] | [completar] |
-| Pedir ayuda | [completar] | [completar] | [completar] |
-| Calificar un recorrido | [completar] | [completar] | [completar] |
+**Pruebas de usabilidad:** por tiempo, **no se alcanzó a hacer una prueba formal con usuarias externas** durante la maratón. Lo que sí se hizo:
+- **Revisión del equipo en celular y en escritorio.** Se detectó que en el navegador de escritorio el mapa salía bloqueado (403 de OpenStreetMap por la política de *Referer*) y se corrigió en el momento.
+- **Pruebas automáticas de los flujos:** registro, login, ruta, recorrido, calificación, alerta y moderación, ejecutadas con peticiones HTTP contra local y producción.
+
+**Plan de prueba formal:** 5 estudiantes de la UCundinamarca con 3 tareas (trazar una ruta segura, pedir ayuda, calificar un recorrido). Se medirá tiempo y número de errores, se aplicará el cuestionario SUS y se corregirá el problema más frecuente.
 
 ## 8. Escalabilidad y sostenibilidad
 - **Otros municipios:** basta con insertar una fila en `cities` (centro y recuadro) y ejecutar `npm run osm:sync`. El código no tiene a Girardot "quemado".
