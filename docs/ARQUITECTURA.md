@@ -12,7 +12,7 @@ Maratón de Programación con Impacto Social (LCUP/CCPL) · Universidad de Cundi
 ## 2. Arquitectura MVC
 
 ```mermaid
-flowchart LR
+flowchart TB
   U[Celular de la usuaria<br/>EJS + CSS + JS vanilla + Leaflet] -->|HTTPS, cookie JWT httpOnly| R[routes/web.js · routes/api.js]
   R --> MW[middleware<br/>auth · requireRole · validators · rateLimits · errorHandler]
   MW --> C[controllers<br/>auth · map · route · trip · alert · contact · incident · admin]
